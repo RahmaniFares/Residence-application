@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Global.md" />
+  </Folder>
+  <Project Path="residence.api/residence.api.csproj" />
+  <Project Path="residence.application/residence.application.csproj" />
+  <Project Path="residence.domain/residence.domain.csproj" />
+  <Project Path="residence.infrastructure/residence.infrastructure.csproj" />
+</Solution>
