@@ -43,12 +43,6 @@ using (var scope = app.Services.CreateScope())
         {
             dbContext.Database.Migrate();
         }
-
-        // Seed initial data
-        if (!dbContext.Residences.Any())
-        {
-            DatabaseSeeder.SeedDatabase(dbContext);
-        }
     }
     catch (Exception ex)
     {
