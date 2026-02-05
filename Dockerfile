@@ -3,17 +3,17 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copier le csproj pour restore (cache optimisation)
-COPY ["src/WebApi/WebApi.csproj", "src/WebApi/"]
-COPY ["src/Application/Application.csproj", "src/Application/"]
-COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
-COPY ["src/Domain/Domain.csproj", "src/Domain/"]
+COPY ["src/residence.api/residence.api.csproj", "residence.api/"]
+COPY ["src/residence.application/residence.application.csproj", "residence.application/"]
+COPY ["src/residence.infrastructure/residence.infrastructure.csproj", "residence.infrastructure/"]
+COPY ["src/residence.domain/residence.domain.csproj", "residence.domain/"]
 
-RUN dotnet restore "src/WebApi/WebApi.csproj"
+RUN dotnet restore "residence.api/residence.api.csproj"
 
 # Copier le reste du code
 COPY . .
 
-WORKDIR "/src/src/WebApi"
+WORKDIR "/src/WebApi"
 RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
 
 
@@ -28,4 +28,4 @@ EXPOSE 8080
 
 ENV ASPNETCORE_URLS=http://+:8080
 
-ENTRYPOINT ["dotnet", "WebApi.dll"]
+ENTRYPOINT ["dotnet", "residence.api.dll"]
