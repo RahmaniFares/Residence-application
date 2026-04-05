@@ -14,12 +14,7 @@ namespace residence.domain.Entities
     public class Resident : BaseEntity
     {
         /// <summary>
-        /// Associated user ID
-        /// </summary>
-        public Guid? UserId { get; set; }
-
-        /// <summary>
-        /// Associated house ID
+        /// Associated house ID (Foreign Key)
         /// </summary>
         public Guid? HouseId { get; set; }
 
@@ -46,7 +41,7 @@ namespace residence.domain.Entities
         /// <summary>
         /// Resident address
         /// </summary>
-        public string Address { get; set; } = string.Empty;
+        public string? Address { get; set; } = string.Empty;
 
         /// <summary>
         /// Date of birth
@@ -68,11 +63,26 @@ namespace residence.domain.Entities
         /// </summary>
         public DateTime? MoveOutDate { get; set; }
 
-        // Navigation properties
-        public User? User { get; set; } 
+
+
+        /// <summary>
+        /// Associated house
+        /// </summary>
         public House? House { get; set; }
+
+        /// <summary>
+        /// Payments made by this resident
+        /// </summary>
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+        /// <summary>
+        /// Incidents reported by this resident
+        /// </summary>
         public ICollection<Incident> Incidents { get; set; } = new List<Incident>();
+
+        /// <summary>
+        /// Posts created by this resident
+        /// </summary>
         public ICollection<Post> Posts { get; set; } = new List<Post>();
     }
 }

@@ -65,6 +65,7 @@ app.UseCors("AllowAll");
 
 // Map endpoints
 app.MapAuthEndpoints();
+app.MapUserEndpoints();
 app.MapResidenceEndpointsCustom();
 app.MapHouseEndpoints();
 app.MapResidentEndpoints();

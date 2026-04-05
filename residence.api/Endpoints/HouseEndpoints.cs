@@ -108,7 +108,7 @@ namespace residence.api.Endpoints
         {
             try
             {
-                var result = await service.GetHousesByResidenceAsync(residenceId, pagination);
+                var result = await service.GetHousesByResidenceWithDetailsAsync(residenceId, pagination);
                 return Results.Ok(result);
             }
             catch (Exception ex)

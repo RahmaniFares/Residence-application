@@ -24,7 +24,6 @@ public class UserRepository : Repository<User>, IUserRepository
     {
         return await _dbSet
             .Where(u => u.ResidenceId == residenceId && !u.IsDeleted)
-            .Include(u => u.Resident)
             .ToListAsync();
     }
 }

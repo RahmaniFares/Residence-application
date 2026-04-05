@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using residence.domain.Common;
 using residence.application.Repositories;
 using residence.infrastructure.Data;
+using Microsoft.Extensions.Logging;
 
 namespace residence.infrastructure.Repositories;
 
@@ -41,6 +42,7 @@ public abstract class Repository<T> : IRepository<T> where T : BaseEntity
         _dbSet.Add(entity);
         await _context.SaveChangesAsync();
         return entity;
+
     }
 
     public virtual async Task UpdateAsync(T entity)

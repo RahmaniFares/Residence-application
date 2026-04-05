@@ -2,7 +2,11 @@ using residence.domain.Enums;
 
 namespace residence.application.DTOs;
 
-public record UserDto(
+/// <summary>
+/// User DTO with associated resident information
+/// Used when retrieving user details including their resident profile
+/// </summary>
+public record UserWithResidentDto(
     Guid Id,
     string Email,
     string FirstName,
@@ -10,8 +14,7 @@ public record UserDto(
     string PhoneNumber,
     UserRole Role,
     string? AvatarUrl,
-    Guid? ResidentId,
+    ResidentDto? Resident,
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );
-

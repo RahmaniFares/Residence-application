@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using residence.infrastructure.Data;
 
@@ -11,9 +12,11 @@ using residence.infrastructure.Data;
 namespace residence.infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260221224308_adresse_nullable")]
+    partial class adresse_nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -718,11 +721,18 @@ namespace residence.infrastructure.Migrations
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HouseId");
 
                     b.HasIndex("ResidenceId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Residents", "dbo");
                 });
@@ -778,9 +788,6 @@ namespace residence.infrastructure.Migrations
                     b.Property<Guid>("ResidenceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ResidentId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -798,10 +805,6 @@ namespace residence.infrastructure.Migrations
                         .IsUnique();
 
                     b.HasIndex("ResidenceId");
-
-                    b.HasIndex("ResidentId")
-                        .IsUnique()
-                        .HasFilter("[ResidentId] IS NOT NULL");
 
                     b.ToTable("Users", "dbo");
                 });
@@ -973,7 +976,14 @@ namespace residence.infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("residence.domain.Entities.User", "User")
+                        .WithOne("Resident")
+                        .HasForeignKey("residence.domain.Entities.Resident", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("House");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("residence.domain.Entities.User", b =>
@@ -983,13 +993,6 @@ namespace residence.infrastructure.Migrations
                         .HasForeignKey("ResidenceId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("residence.domain.Entities.Resident", "Resident")
-                        .WithOne()
-                        .HasForeignKey("residence.domain.Entities.User", "ResidentId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Resident");
                 });
 
             modelBuilder.Entity("residence.domain.Entities.Expense", b =>
@@ -1045,6 +1048,11 @@ namespace residence.infrastructure.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("residence.domain.Entities.User", b =>
+                {
+                    b.Navigation("Resident");
                 });
 #pragma warning restore 612, 618
         }

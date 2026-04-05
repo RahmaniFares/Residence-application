@@ -101,6 +101,7 @@ public class AuthService : IAuthService
             user.PhoneNumber,
             (residence.application.DTOs.UserRole)user.Role,
             user.AvatarUrl,
+            user.ResidenceId,
             user.CreatedAt,
             user.UpdatedAt
         );

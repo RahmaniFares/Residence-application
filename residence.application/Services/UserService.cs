@@ -36,6 +36,13 @@ public class UserService : IUserService
         user.LastName = dto.LastName;
         user.PhoneNumber = dto.PhoneNumber;
         user.AvatarUrl = dto.AvatarUrl;
+
+        // Update resident association if provided
+        if (dto.ResidentId.HasValue)
+        {
+            user.ResidentId = dto.ResidentId.Value;
+        }
+
         user.UpdatedAt = DateTime.UtcNow;
 
         await _userRepository.UpdateAsync(user);
@@ -78,6 +85,7 @@ public class UserService : IUserService
             user.PhoneNumber,
             (UserRole)user.Role,
             user.AvatarUrl,
+            user.ResidentId,
             user.CreatedAt,
             user.UpdatedAt
         );

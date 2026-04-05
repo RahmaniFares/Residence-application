@@ -7,6 +7,7 @@ namespace residence.infrastructure.Configurations;
 
 /// <summary>
 /// Entity configuration for Resident
+/// Configures the one-to-one relationship between Resident and User
 /// </summary>
 public class ResidentConfiguration : IEntityTypeConfiguration<Resident>
 {
@@ -47,12 +48,9 @@ public class ResidentConfiguration : IEntityTypeConfiguration<Resident>
         builder.Property(e => e.IsDeleted)
             .HasDefaultValue(false);
 
-        // Relationships
-        builder.HasOne(r => r.User)
-            .WithOne(u => u.Resident)
-            .HasForeignKey<Resident>(r => r.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
 
+
+        // One-to-Many Relationships
         builder.HasOne(r => r.House)
             .WithMany(h => h.Residents)
             .HasForeignKey(r => r.HouseId)

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using residence.infrastructure.Data;
 
@@ -11,9 +12,11 @@ using residence.infrastructure.Data;
 namespace residence.infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260312022727_adjust_user_2")]
+    partial class adjust_user_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -778,9 +781,6 @@ namespace residence.infrastructure.Migrations
                     b.Property<Guid>("ResidenceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ResidentId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -798,10 +798,6 @@ namespace residence.infrastructure.Migrations
                         .IsUnique();
 
                     b.HasIndex("ResidenceId");
-
-                    b.HasIndex("ResidentId")
-                        .IsUnique()
-                        .HasFilter("[ResidentId] IS NOT NULL");
 
                     b.ToTable("Users", "dbo");
                 });
@@ -983,13 +979,6 @@ namespace residence.infrastructure.Migrations
                         .HasForeignKey("ResidenceId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("residence.domain.Entities.Resident", "Resident")
-                        .WithOne()
-                        .HasForeignKey("residence.domain.Entities.User", "ResidentId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Resident");
                 });
 
             modelBuilder.Entity("residence.domain.Entities.Expense", b =>

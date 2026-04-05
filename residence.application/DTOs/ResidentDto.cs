@@ -4,7 +4,6 @@ namespace residence.application.DTOs;
 
 public record ResidentDto(
     Guid Id,
-    Guid? UserId,
     Guid? HouseId,
     string FirstName,
     string LastName,

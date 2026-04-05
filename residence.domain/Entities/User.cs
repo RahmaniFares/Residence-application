@@ -48,7 +48,17 @@ namespace residence.domain.Entities
         /// </summary>
         public string? AvatarUrl { get; set; }
 
-        // Navigation property
+        /// <summary>
+        /// Associated resident ID (Foreign Key - one-to-one relationship)
+        /// A user can optionally be a resident
+        /// </summary>
+        public Guid? ResidentId { get; set; }
+
+        //// Navigation property - One-to-One relationship with Resident
+        ///// <summary>
+        ///// Associated resident profile (one-to-one relationship)
+        ///// A user can optionally be associated with a resident profile
+        ///// </summary>
         public Resident? Resident { get; set; }
     }
 }

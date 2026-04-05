@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using residence.infrastructure.Data;
 
@@ -11,9 +12,11 @@ using residence.infrastructure.Data;
 namespace residence.infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260312022215_adjust_user")]
+    partial class adjust_user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -781,6 +784,9 @@ namespace residence.infrastructure.Migrations
                     b.Property<Guid?>("ResidentId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ResidentId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -802,6 +808,10 @@ namespace residence.infrastructure.Migrations
                     b.HasIndex("ResidentId")
                         .IsUnique()
                         .HasFilter("[ResidentId] IS NOT NULL");
+
+                    b.HasIndex("ResidentId1")
+                        .IsUnique()
+                        .HasFilter("[ResidentId1] IS NOT NULL");
 
                     b.ToTable("Users", "dbo");
                 });
@@ -989,6 +999,10 @@ namespace residence.infrastructure.Migrations
                         .HasForeignKey("residence.domain.Entities.User", "ResidentId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("residence.domain.Entities.Resident", null)
+                        .WithOne("User")
+                        .HasForeignKey("residence.domain.Entities.User", "ResidentId1");
+
                     b.Navigation("Resident");
                 });
 
@@ -1045,6 +1059,8 @@ namespace residence.infrastructure.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("Posts");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

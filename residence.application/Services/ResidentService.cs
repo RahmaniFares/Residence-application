@@ -23,7 +23,7 @@ public class ResidentService : IResidentService
         {
             Id = Guid.NewGuid(),
             ResidenceId = residenceId,
-            UserId = dto.UserId,
+            //UserId = dto.UserId,
             HouseId = dto.HouseId,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
@@ -56,7 +56,6 @@ public class ResidentService : IResidentService
             throw new Exception("Resident not found");
 
         resident.HouseId = dto.HouseId;
-        resident.UserId = dto.UserId;
         resident.FirstName = dto.FirstName;
         resident.LastName = dto.LastName;
         resident.PhoneNumber = dto.PhoneNumber;
@@ -115,7 +114,6 @@ public class ResidentService : IResidentService
     {
         return new ResidentDto(
             resident.Id,
-            resident.UserId,
             resident.HouseId,
             resident.FirstName,
             resident.LastName,

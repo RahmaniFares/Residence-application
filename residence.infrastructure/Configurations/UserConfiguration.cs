@@ -7,6 +7,8 @@ namespace residence.infrastructure.Configurations;
 
 /// <summary>
 /// Entity configuration for User
+/// Configures the one-to-one relationship between User and Resident
+/// FK is on User side (User.ResidentId)
 /// </summary>
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
@@ -40,10 +42,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(500);
 
         builder.Property(e => e.Role)
-            .HasDefaultValue(UserRole.Resident); // UserRole.Resident
+            .HasDefaultValue(UserRole.Resident);
 
-        builder.Property(e => e.ResidenceId)
-            .IsRequired();
 
         builder.Property(e => e.CreatedAt)
             .HasDefaultValueSql("GETUTCDATE()");
@@ -51,11 +51,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(e => e.IsDeleted)
             .HasDefaultValue(false);
 
-        // Relationships
-        builder.HasOne(u => u.Resident)
-            .WithOne(r => r.User)
-            .HasForeignKey<Resident>(r => r.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+        //// One-to-One Relationship Configuration
+        //// One User can have one Resident, one Resident can have one User
+        //// The foreign key is on the User side (ResidentId)
+        builder.HasOne(h => h.Resident)
+            .WithOne()
+            .HasForeignKey<User>(h => h.ResidentId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.ToTable("Users", "dbo");
     }

@@ -94,7 +94,7 @@ public class HouseService : IHouseService
     public async Task<PagedResultDto<HouseDto>> GetHousesByResidenceAsync(Guid residenceId, PaginationDto pagination)
     {
         var houses = await _houseRepository.GetByResidenceAsync(residenceId);
-        
+
         var total = houses.Count();
         var items = houses
             .Skip((pagination.PageNumber - 1) * pagination.PageSize)
@@ -105,6 +105,33 @@ public class HouseService : IHouseService
         var totalPages = (int)Math.Ceiling(total / (double)pagination.PageSize);
 
         return new PagedResultDto<HouseDto>(items, total, pagination.PageNumber, pagination.PageSize, totalPages);
+    }
+
+    public async Task<PagedResultDto<HouseDetailDto>> GetHousesByResidenceWithDetailsAsync(Guid residenceId, PaginationDto pagination)
+    {
+        var houses = await _houseRepository.GetByResidenceWithDetailsAsync(residenceId);
+
+        var total = houses.Count();
+        var items = houses
+            .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .Select(h => new HouseDetailDto(
+                h.Id,
+                h.Block,
+                h.Unit,
+                h.Floor,
+                (residence.application.DTOs.HouseStatus)h.Status,
+                h.CurrentResidentId,
+                h.CurrentResident != null ? MapResidentToDto(h.CurrentResident) : null,
+                h.Residents.Count,
+                h.CreatedAt,
+                h.UpdatedAt
+            ))
+            .ToList();
+
+        var totalPages = (int)Math.Ceiling(total / (double)pagination.PageSize);
+
+        return new PagedResultDto<HouseDetailDto>(items, total, pagination.PageNumber, pagination.PageSize, totalPages);
     }
 
     private HouseDto MapToDto(House house)
@@ -125,7 +152,6 @@ public class HouseService : IHouseService
     {
         return new ResidentDto(
             resident.Id,
-            resident.UserId,
             resident.HouseId,
             resident.FirstName,
             resident.LastName,

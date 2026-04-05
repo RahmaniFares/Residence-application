@@ -13,4 +13,5 @@ public interface IHouseService
     Task<HouseDto> UpdateHouseAsync(Guid id, UpdateHouseDto dto);
     Task DeleteHouseAsync(Guid id);
     Task<PagedResultDto<HouseDto>> GetHousesByResidenceAsync(Guid residenceId, PaginationDto pagination);
+    Task<PagedResultDto<HouseDetailDto>> GetHousesByResidenceWithDetailsAsync(Guid residenceId, PaginationDto pagination);
 }
