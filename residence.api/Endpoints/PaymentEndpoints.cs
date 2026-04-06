@@ -48,6 +48,7 @@ namespace residence.api.Endpoints
         {
             try
             {
+
                 var result = await service.CreatePaymentAsync(residenceId, dto);
                 return Results.Created($"/api/residences/{residenceId}/payments/{result.Id}", result);
             }
