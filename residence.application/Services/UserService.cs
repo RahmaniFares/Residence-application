@@ -35,7 +35,11 @@ public class UserService : IUserService
         user.FirstName = dto.FirstName;
         user.LastName = dto.LastName;
         user.PhoneNumber = dto.PhoneNumber;
-        user.AvatarUrl = dto.AvatarUrl;
+        if(user.AvatarUrl != null)
+        {
+            user.AvatarUrl = dto.AvatarUrl;
+
+        }
 
         // Update resident association if provided
         if (dto.ResidentId.HasValue)
@@ -48,7 +52,7 @@ public class UserService : IUserService
         await _userRepository.UpdateAsync(user);
 
         return MapToDto(user);
-    }
+        }
 
     public async Task DeleteUserAsync(Guid id)
     {

@@ -25,6 +25,10 @@ public class ApplicationDbContext : DbContext
     // Payments
     public DbSet<Payment> Payments { get; set; }
 
+    // Tariffs
+    public DbSet<Tarif> Tarifs { get; set; }
+    public DbSet<TarifHistory> TarifHistories { get; set; }
+
     // Expenses
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<ExpenseImage> ExpenseImages { get; set; }
@@ -51,6 +55,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new HouseConfiguration());
         modelBuilder.ApplyConfiguration(new ResidentConfiguration());
         modelBuilder.ApplyConfiguration(new PaymentConfiguration());
+        modelBuilder.ApplyConfiguration(new TarifConfiguration());
+        modelBuilder.ApplyConfiguration(new TarifHistoryConfiguration());
         modelBuilder.ApplyConfiguration(new ExpenseConfiguration());
         modelBuilder.ApplyConfiguration(new ExpenseImageConfiguration());
         modelBuilder.ApplyConfiguration(new IncidentConfiguration());

@@ -70,6 +70,7 @@ app.MapResidenceEndpointsCustom();
 app.MapHouseEndpoints();
 app.MapResidentEndpoints();
 app.MapPaymentEndpoints();
+app.MapTarifEndpoints();
 app.MapExpenseEndpoints();
 app.MapIncidentEndpoints();
 app.MapPostEndpoints();

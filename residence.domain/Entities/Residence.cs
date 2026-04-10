@@ -69,6 +69,8 @@ namespace residence.domain.Entities
         public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
         public ICollection<Incident> Incidents { get; set; } = new List<Incident>();
         public ICollection<Post> Posts { get; set; } = new List<Post>();
+        public ICollection<Tarif> Tarifs { get; set; } = new List<Tarif>();
+        public ICollection<TarifHistory> TarifHistories { get; set; } = new List<TarifHistory>();
         public ResidenceSettings Settings { get; set; } = null!;
     }
 

@@ -10,7 +10,7 @@ namespace residence.api.Endpoints
     {
         public static void MapUserEndpoints(this WebApplication app)
         {
-            var group = app.MapGroup("/api/users")
+            var group = app.MapGroup("/api/residences/users")
                 .WithTags("Users")
                 .WithOpenApi();
 

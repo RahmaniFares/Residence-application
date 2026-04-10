@@ -28,6 +28,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IResidentRepository, ResidentRepository>();
         services.AddScoped<IResidenceSettingRepository, ResidenceSettingRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<ITarifRepository, TarifRepository>();
+        services.AddScoped<ITarifHistoryRepository, TarifHistoryRepository>();
         services.AddScoped<IExpenseRepository, ExpenseRepository>();
         services.AddScoped<IExpenseImageRepository, ExpenseImageRepository>();
         services.AddScoped<IIncidentRepository, IncidentRepository>();

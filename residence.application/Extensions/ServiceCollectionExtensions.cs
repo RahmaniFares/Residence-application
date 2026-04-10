@@ -18,6 +18,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHouseService, HouseService>();
         services.AddScoped<IResidentService, ResidentService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<ITarifService, TarifService>();
         services.AddScoped<IExpenseService, ExpenseService>();
         services.AddScoped<IIncidentService, IncidentService>();
         services.AddScoped<IPostService, PostService>();
