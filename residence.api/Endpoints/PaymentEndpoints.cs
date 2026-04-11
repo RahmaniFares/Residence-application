@@ -1,5 +1,6 @@
 ﻿using residence.application.DTOs;
 using residence.application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace residence.api.Endpoints
 {
@@ -42,6 +43,23 @@ namespace residence.api.Endpoints
             group.MapGet("/house/{houseId}", GetPaymentsByHouse)
                 .WithName("GetPaymentsByHouse")
                 .WithSummary("Get house payments");
+
+            // KPI endpoints
+            group.MapGet("/kpi/dashboard", GetPaymentKpi)
+                .WithName("GetPaymentKpi")
+                .WithSummary("Get payment KPI and statistics");
+
+            group.MapGet("/kpi/range", GetPaymentKpiByDateRange)
+                .WithName("GetPaymentKpiByDateRange")
+                .WithSummary("Get payment KPI for date range");
+
+            group.MapGet("/kpi/monthly-summary", GetMonthlySummary)
+                .WithName("GetMonthlySummary")
+                .WithSummary("Get monthly payment summaries");
+
+            group.MapGet("/kpi/trend", GetPaymentTrend)
+                .WithName("GetPaymentTrend")
+                .WithSummary("Get payment trend data");
         }
 
         private static async Task<IResult> CreatePayment(IPaymentService service, Guid residenceId, CreatePaymentDto dto)
@@ -133,6 +151,78 @@ namespace residence.api.Endpoints
             catch (Exception ex)
             {
                 return Results.BadRequest(new { message = ex.Message });
+            }
+        }
+
+        private static async Task<IResult> GetPaymentKpi(IPaymentService service, Guid residenceId)
+        {
+            try
+            {
+                var result = await service.GetPaymentKpiAsync(residenceId);
+                return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Results.StatusCode(500);
+            }
+        }
+
+        private static async Task<IResult> GetPaymentKpiByDateRange(
+            IPaymentService service,
+            Guid residenceId,
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                if (startDate >= endDate)
+                    return Results.BadRequest(new { message = "Start date must be before end date" });
+
+                var result = await service.GetPaymentKpiByDateRangeAsync(residenceId, startDate, endDate);
+                return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Results.StatusCode(500);
+            }
+        }
+
+        private static async Task<IResult> GetMonthlySummary(
+            IPaymentService service,
+            Guid residenceId,
+            [FromQuery] int months = 12)
+        {
+            try
+            {
+                if (months < 1 || months > 120)
+                    return Results.BadRequest(new { message = "Months must be between 1 and 120" });
+
+                var result = await service.GetMonthlyPaymentSummaryAsync(residenceId, months);
+                return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Results.StatusCode(500);
+            }
+        }
+
+        private static async Task<IResult> GetPaymentTrend(
+            IPaymentService service,
+            Guid residenceId,
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                if (startDate >= endDate)
+                    return Results.BadRequest(new { message = "Start date must be before end date" });
+
+                var result = await service.GetPaymentTrendAsync(residenceId, startDate, endDate);
+                return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Results.StatusCode(500);
             }
         }
     }
