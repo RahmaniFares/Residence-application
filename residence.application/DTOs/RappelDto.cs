@@ -22,5 +22,6 @@ public record CreateRappelDto(
 public record UpdateRappelDto(
     RappelStatus Status,
     DateTime? PaymentDate = null,
+    decimal? Amount = null,
     string? Notes = null
 );

@@ -23,7 +23,7 @@ public class RappelService : IRappelService
             ResidenceId = residenceId,
             HouseId = dto.HouseId,
             Amount = dto.Amount,
-            Status = RappelStatus.Unpaid,
+            Status = RappelStatus.Paid,
             Notes = dto.Notes,
             CreatedAt = DateTime.UtcNow
         };
@@ -50,6 +50,7 @@ public class RappelService : IRappelService
         rappel.Status = dto.Status;
         rappel.PaymentDate = dto.PaymentDate;
         rappel.Notes = dto.Notes;
+        rappel.Amount = dto.Amount ?? rappel.Amount;
         rappel.UpdatedAt = DateTime.UtcNow;
 
         await _rappelRepository.UpdateAsync(rappel);

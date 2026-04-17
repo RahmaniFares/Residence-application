@@ -37,6 +37,10 @@ namespace residence.api.Endpoints
             group.MapGet("/", GetHousesByResidence)
                 .WithName("GetHousesByResidence")
                 .WithSummary("Get all houses in residence");
+
+            group.MapGet("/{id}/financial-statement", GetHouseFinancialStatement)
+                .WithName("GetHouseFinancialStatement")
+                .WithSummary("Get house financial statement");
         }
 
         private static async Task<IResult> CreateHouse(IHouseService service, Guid residenceId, CreateHouseDto dto)
@@ -114,6 +118,19 @@ namespace residence.api.Endpoints
             catch (Exception ex)
             {
                 return Results.BadRequest(new { message = ex.Message });
+            }
+        }
+
+        private static async Task<IResult> GetHouseFinancialStatement(IHouseService service, Guid id)
+        {
+            try
+            {
+                var result = await service.GetHouseFinancialStatementAsync(id);
+                return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Results.NotFound(new { message = ex.Message });
             }
         }
     }
