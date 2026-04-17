@@ -40,6 +40,8 @@ namespace residence.domain.Entities
         public ICollection<Resident> Residents { get; set; } = new List<Resident>();
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
         public ICollection<Incident> Incidents { get; set; } = new List<Incident>();
+        public ICollection<UserHouse> UserHouses { get; set; } = new List<UserHouse>();
+        public ICollection<Rappel> Rappels { get; set; } = new List<Rappel>();
     }
 
 }

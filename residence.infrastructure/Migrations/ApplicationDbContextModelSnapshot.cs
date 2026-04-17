@@ -371,6 +371,60 @@ namespace residence.infrastructure.Migrations
                     b.ToTable("Payments", "dbo");
                 });
 
+            modelBuilder.Entity("residence.domain.Entities.PaymentLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("FromMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FromYear")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ResidenceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Tarif")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ToMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToYear")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
+
+                    b.ToTable("PaymentLines", "dbo");
+                });
+
             modelBuilder.Entity("residence.domain.Entities.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -513,6 +567,60 @@ namespace residence.infrastructure.Migrations
                         .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("PostLikes", "dbo");
+                });
+
+            modelBuilder.Entity("residence.domain.Entities.Rappel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("HouseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ResidenceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HouseId");
+
+                    b.ToTable("Rappels", "dbo");
                 });
 
             modelBuilder.Entity("residence.domain.Entities.Residence", b =>
@@ -956,6 +1064,63 @@ namespace residence.infrastructure.Migrations
                     b.ToTable("Users", "dbo");
                 });
 
+            modelBuilder.Entity("residence.domain.Entities.UserHouse", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AssignedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("HouseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("ResidenceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HouseId")
+                        .HasDatabaseName("IX_UserHouse_HouseId");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_UserHouse_UserId");
+
+                    b.HasIndex("UserId", "HouseId")
+                        .HasDatabaseName("IX_UserHouse_UserId_HouseId");
+
+                    b.ToTable("UserHouses");
+                });
+
             modelBuilder.Entity("residence.domain.Entities.Expense", b =>
                 {
                     b.HasOne("residence.domain.Entities.Residence", null)
@@ -1052,6 +1217,17 @@ namespace residence.infrastructure.Migrations
                     b.Navigation("Resident");
                 });
 
+            modelBuilder.Entity("residence.domain.Entities.PaymentLine", b =>
+                {
+                    b.HasOne("residence.domain.Entities.Payment", "Payment")
+                        .WithMany("Lines")
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Payment");
+                });
+
             modelBuilder.Entity("residence.domain.Entities.Post", b =>
                 {
                     b.HasOne("residence.domain.Entities.Resident", "Author")
@@ -1097,6 +1273,17 @@ namespace residence.infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("residence.domain.Entities.Rappel", b =>
+                {
+                    b.HasOne("residence.domain.Entities.House", "House")
+                        .WithMany("Rappels")
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("House");
                 });
 
             modelBuilder.Entity("residence.domain.Entities.ResidenceSettings", b =>
@@ -1172,6 +1359,25 @@ namespace residence.infrastructure.Migrations
                     b.Navigation("Resident");
                 });
 
+            modelBuilder.Entity("residence.domain.Entities.UserHouse", b =>
+                {
+                    b.HasOne("residence.domain.Entities.House", "House")
+                        .WithMany("UserHouses")
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("residence.domain.Entities.User", "User")
+                        .WithMany("UserHouses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("House");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("residence.domain.Entities.Expense", b =>
                 {
                     b.Navigation("Images");
@@ -1183,12 +1389,21 @@ namespace residence.infrastructure.Migrations
 
                     b.Navigation("Payments");
 
+                    b.Navigation("Rappels");
+
                     b.Navigation("Residents");
+
+                    b.Navigation("UserHouses");
                 });
 
             modelBuilder.Entity("residence.domain.Entities.Incident", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("residence.domain.Entities.Payment", b =>
+                {
+                    b.Navigation("Lines");
                 });
 
             modelBuilder.Entity("residence.domain.Entities.Post", b =>
@@ -1234,6 +1449,11 @@ namespace residence.infrastructure.Migrations
             modelBuilder.Entity("residence.domain.Entities.Tarif", b =>
                 {
                     b.Navigation("History");
+                });
+
+            modelBuilder.Entity("residence.domain.Entities.User", b =>
+                {
+                    b.Navigation("UserHouses");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,5 +5,6 @@ namespace residence.application.DTOs;
 public record UpdatePaymentDto(
     PaymentStatus Status,
     DateTime? PaymentDate = null,
-    string? Notes = null
+    string? Notes = null,
+    IEnumerable<UpdatePaymentLineDto>? Lines = null
 );

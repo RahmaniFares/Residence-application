@@ -70,8 +70,12 @@ namespace residence.application.Services
             if (tarif.ResidenceId != residenceId)
                 throw new InvalidOperationException("Tariff does not belong to the specified residence.");
 
+            // Store the old amount for rappel detection
+            var oldAmount = tarif.Amount;
+            var amountChanged = dto.Amount.HasValue && dto.Amount != tarif.Amount;
+
             // Record history if amount or description changed
-            if (dto.Amount.HasValue && dto.Amount != tarif.Amount || 
+            if (amountChanged || 
                 !string.IsNullOrEmpty(dto.Description) && dto.Description != tarif.Description)
             {
                 var history = new TarifHistory
@@ -82,7 +86,7 @@ namespace residence.application.Services
                     NewAmount = dto.Amount ?? tarif.Amount,
                     PreviousDescription = tarif.Description,
                     NewDescription = dto.Description ?? tarif.Description,
-                    EffectiveDate = DateTime.UtcNow,
+                    EffectiveDate = dto.EffectiveDate ?? DateTime.UtcNow,
                     ChangedBy = userId,
                     ChangeReason = dto.ChangeReason
                 };
@@ -99,6 +103,9 @@ namespace residence.application.Services
 
             if (!string.IsNullOrEmpty(dto.Currency))
                 tarif.Currency = dto.Currency;
+
+            if (dto.EffectiveDate.HasValue)
+                tarif.EffectiveDate = dto.EffectiveDate.Value;
 
             if (!string.IsNullOrEmpty(dto.Notes))
                 tarif.Notes = dto.Notes;
@@ -144,6 +151,42 @@ namespace residence.application.Services
         {
             var history = await _tarifHistoryRepository.GetHistoryByDateRangeAsync(residenceId, startDate, endDate);
             return history.Select(MapHistoryToDto).OrderByDescending(h => h.ChangedAt).ToList();
+        }
+
+        public async Task<TarifHistoryDto> UpdateTarifHistoryAsync(Guid residenceId, Guid tarifId, Guid historyId, UpdateTarifHistoryDto dto, string userId)
+        {
+            var history = await _tarifHistoryRepository.GetByIdAsync(historyId);
+            if (history == null)
+                throw new InvalidOperationException($"History record with ID {historyId} not found.");
+
+            if (history.ResidenceId != residenceId)
+                throw new InvalidOperationException("History record does not belong to the specified residence.");
+
+            if (history.TarifId != tarifId)
+                throw new InvalidOperationException("History record does not belong to the specified tariff.");
+
+            // Update history fields
+            if (dto.PreviousAmount.HasValue)
+                history.PreviousAmount = dto.PreviousAmount.Value;
+
+            if (dto.NewAmount.HasValue)
+                history.NewAmount = dto.NewAmount.Value;
+
+            if (!string.IsNullOrEmpty(dto.PreviousDescription))
+                history.PreviousDescription = dto.PreviousDescription;
+
+            if (!string.IsNullOrEmpty(dto.NewDescription))
+                history.NewDescription = dto.NewDescription;
+
+            if (dto.EffectiveDate.HasValue)
+                history.EffectiveDate = dto.EffectiveDate.Value;
+
+            if (!string.IsNullOrEmpty(dto.ChangeReason))
+                history.ChangeReason = dto.ChangeReason;
+
+            await _tarifHistoryRepository.UpdateAsync(history);
+
+            return MapHistoryToDto(history);
         }
 
         public async Task<bool> DeleteTarifAsync(Guid residenceId, Guid tarifId)

@@ -51,6 +51,11 @@ namespace residence.application.Interfaces
         Task<IEnumerable<TarifHistoryDto>> GetTarifHistoryByDateRangeAsync(Guid residenceId, DateTime startDate, DateTime endDate);
 
         /// <summary>
+        /// Update tariff history
+        /// </summary>
+        Task<TarifHistoryDto> UpdateTarifHistoryAsync(Guid residenceId, Guid tarifId, Guid historyId, UpdateTarifHistoryDto dto, string userId);
+
+        /// <summary>
         /// Delete a tariff (soft delete)
         /// </summary>
         Task<bool> DeleteTarifAsync(Guid residenceId, Guid tarifId);

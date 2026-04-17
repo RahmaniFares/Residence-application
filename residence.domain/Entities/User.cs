@@ -60,5 +60,10 @@ namespace residence.domain.Entities
         ///// A user can optionally be associated with a resident profile
         ///// </summary>
         public Resident? Resident { get; set; }
+
+        /// <summary>
+        /// Houses associated with this user
+        /// </summary>
+        public ICollection<UserHouse> UserHouses { get; set; } = new List<UserHouse>();
     }
 }

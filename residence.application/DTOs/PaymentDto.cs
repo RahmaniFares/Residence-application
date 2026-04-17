@@ -14,5 +14,6 @@ public record PaymentDto(
     PaymentStatus Status,
     string? Notes,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    IEnumerable<PaymentLineDto>? Lines = null
 );

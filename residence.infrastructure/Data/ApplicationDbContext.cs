@@ -21,9 +21,12 @@ public class ApplicationDbContext : DbContext
     // Property Management
     public DbSet<House> Houses { get; set; }
     public DbSet<Resident> Residents { get; set; }
+    public DbSet<UserHouse> UserHouses { get; set; }
 
     // Payments
     public DbSet<Payment> Payments { get; set; }
+    public DbSet<PaymentLine> PaymentLines { get; set; }
+    public DbSet<Rappel> Rappels { get; set; }
 
     // Tariffs
     public DbSet<Tarif> Tarifs { get; set; }
@@ -53,8 +56,11 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ResidenceSettingsConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new HouseConfiguration());
+        modelBuilder.ApplyConfiguration(new UserHouseConfiguration());
         modelBuilder.ApplyConfiguration(new ResidentConfiguration());
         modelBuilder.ApplyConfiguration(new PaymentConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentLineConfiguration());
+        modelBuilder.ApplyConfiguration(new RappelConfiguration());
         modelBuilder.ApplyConfiguration(new TarifConfiguration());
         modelBuilder.ApplyConfiguration(new TarifHistoryConfiguration());
         modelBuilder.ApplyConfiguration(new ExpenseConfiguration());

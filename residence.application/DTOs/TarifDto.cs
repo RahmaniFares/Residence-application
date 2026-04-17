@@ -54,6 +54,11 @@ namespace residence.application.DTOs
         public string? Currency { get; set; }
 
         /// <summary>
+        /// Effective date when this tariff becomes/became active
+        /// </summary>
+        public DateTime? EffectiveDate { get; set; }
+
+        /// <summary>
         /// Additional notes
         /// </summary>
         public string? Notes { get; set; }
@@ -123,6 +128,42 @@ namespace residence.application.DTOs
         /// Updated at
         /// </summary>
         public DateTime? UpdatedAt { get; set; }
+    }
+
+    /// <summary>
+    /// DTO for updating tariff history
+    /// </summary>
+    public class UpdateTarifHistoryDto
+    {
+        /// <summary>
+        /// Previous amount
+        /// </summary>
+        public decimal? PreviousAmount { get; set; }
+
+        /// <summary>
+        /// New amount
+        /// </summary>
+        public decimal? NewAmount { get; set; }
+
+        /// <summary>
+        /// Previous description
+        /// </summary>
+        public string? PreviousDescription { get; set; }
+
+        /// <summary>
+        /// New description
+        /// </summary>
+        public string? NewDescription { get; set; }
+
+        /// <summary>
+        /// Effective date when the change became/will become effective
+        /// </summary>
+        public DateTime? EffectiveDate { get; set; }
+
+        /// <summary>
+        /// Change reason
+        /// </summary>
+        public string? ChangeReason { get; set; }
     }
 
     /// <summary>

@@ -7,6 +7,11 @@ namespace residence.application.Interfaces;
 /// </summary>
 public interface IUserService
 {
+    /// <summary>
+    /// Create a new user in a residence
+    /// </summary>
+    Task<UserDto> CreateUserAsync(Guid residenceId, CreateUserDto dto);
+
     Task<UserDto> GetUserByIdAsync(Guid id);
     Task<UserDto> UpdateUserAsync(Guid id, UpdateUserDto dto);
     Task DeleteUserAsync(Guid id);

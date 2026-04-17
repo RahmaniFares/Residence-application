@@ -15,12 +15,28 @@ public class PaymentRepository : Repository<Payment>, IPaymentRepository
     {
     }
 
+    public override async Task<Payment?> GetByIdAsync(Guid id)
+    {
+        return await _dbSet
+            .Include(p => p.Lines)
+            .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+    }
+
+    public override async Task<IEnumerable<Payment>> GetByResidenceAsync(Guid residenceId)
+    {
+        return await _dbSet
+            .Include(p => p.Lines)
+            .Where(e => e.ResidenceId == residenceId && !e.IsDeleted)
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<Payment>> GetByResidentAsync(Guid residentId)
     {
         return await _dbSet
             .Where(p => p.ResidentId == residentId && !p.IsDeleted)
             .Include(p => p.House)
             .Include(p => p.Resident)
+            .Include(p => p.Lines)
             .OrderByDescending(p => p.PeriodStart)
             .ToListAsync();
     }
@@ -30,6 +46,7 @@ public class PaymentRepository : Repository<Payment>, IPaymentRepository
         return await _dbSet
             .Where(p => p.HouseId == houseId && !p.IsDeleted)
             .Include(p => p.Resident)
+            .Include(p => p.Lines)
             .OrderByDescending(p => p.PeriodStart)
             .ToListAsync();
     }

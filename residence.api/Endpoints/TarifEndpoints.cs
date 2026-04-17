@@ -51,6 +51,10 @@ namespace residence.api.Endpoints
             group.MapGet("/history/range", GetTarifHistoryByDateRange)
                 .WithName("GetTarifHistoryByDateRange")
                 .WithSummary("Get tariff changes within a date range");
+
+            group.MapPut("/{tarifId}/history/{historyId}", UpdateTarifHistory)
+                .WithName("UpdateTarifHistory")
+                .WithSummary("Update tariff history record");
         }
 
         private static async Task<IResult> CreateTarif(
@@ -196,6 +200,28 @@ namespace residence.api.Endpoints
 
                 var result = await service.GetTarifHistoryByDateRangeAsync(residenceId, startDate, endDate);
                 return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Results.StatusCode(500);
+            }
+        }
+
+        private static async Task<IResult> UpdateTarifHistory(
+            ITarifService service,
+            Guid residenceId,
+            Guid tarifId,
+            Guid historyId,
+            UpdateTarifHistoryDto dto)
+        {
+            try
+            {
+                var result = await service.UpdateTarifHistoryAsync(residenceId, tarifId, historyId, dto, string.Empty);
+                return Results.Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Results.BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {

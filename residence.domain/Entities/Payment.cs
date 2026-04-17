@@ -61,5 +61,10 @@ namespace residence.domain.Entities
         // Navigation properties
         public House House { get; set; } = null!;
         public Resident Resident { get; set; } = null!;
+
+        /// <summary>
+        /// Lines of payments
+        /// </summary>
+        public ICollection<PaymentLine> Lines { get; set; } = new List<PaymentLine>();
     }
 }

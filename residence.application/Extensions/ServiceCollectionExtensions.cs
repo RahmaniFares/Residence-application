@@ -16,8 +16,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IResidenceService, ResidenceService>();
         services.AddScoped<IHouseService, HouseService>();
+        services.AddScoped<IUserHouseService, UserHouseService>();
         services.AddScoped<IResidentService, ResidentService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IRappelService, RappelService>();
         services.AddScoped<ITarifService, TarifService>();
         services.AddScoped<IExpenseService, ExpenseService>();
         services.AddScoped<IIncidentService, IncidentService>();

@@ -17,6 +17,33 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
+    public async Task<UserDto> CreateUserAsync(Guid residenceId, CreateUserDto dto)
+    {
+        // Check if email already exists in this residence
+        var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+        if (existingUser != null && existingUser.ResidenceId == residenceId)
+            throw new InvalidOperationException("Email already exists in this residence");
+
+        // Hash the password (simplified - use BCrypt in production)
+        var passwordHash = HashPassword(dto.Password);
+
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            ResidenceId = residenceId,
+            Email = dto.Email,
+            PasswordHash = passwordHash,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            PhoneNumber = dto.PhoneNumber,
+            Role = (residence.domain.Enums.UserRole)dto.Role,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var created = await _userRepository.AddAsync(user);
+        return MapToDto(created);
+    }
+
     public async Task<UserDto> GetUserByIdAsync(Guid id)
     {
         var user = await _userRepository.GetByIdAsync(id);
@@ -35,10 +62,16 @@ public class UserService : IUserService
         user.FirstName = dto.FirstName;
         user.LastName = dto.LastName;
         user.PhoneNumber = dto.PhoneNumber;
+
         if(user.AvatarUrl != null)
         {
             user.AvatarUrl = dto.AvatarUrl;
+        }
 
+        // Update user role if provided
+        if (dto.Role.HasValue)
+        {
+            user.Role = (residence.domain.Enums.UserRole)dto.Role.Value;
         }
 
         // Update resident association if provided
@@ -93,5 +126,10 @@ public class UserService : IUserService
             user.CreatedAt,
             user.UpdatedAt
         );
+    }
+
+    private static string HashPassword(string password)
+    {
+        return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
     }
 }

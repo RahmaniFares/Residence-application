@@ -25,9 +25,11 @@ public static class ServiceCollectionExtensions
         // Register specific repositories
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IHouseRepository, HouseRepository>();
+        services.AddScoped<IUserHouseRepository, UserHouseRepository>();
         services.AddScoped<IResidentRepository, ResidentRepository>();
         services.AddScoped<IResidenceSettingRepository, ResidenceSettingRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<IRappelRepository, RappelRepository>();
         services.AddScoped<ITarifRepository, TarifRepository>();
         services.AddScoped<ITarifHistoryRepository, TarifHistoryRepository>();
         services.AddScoped<IExpenseRepository, ExpenseRepository>();

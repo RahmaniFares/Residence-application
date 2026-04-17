@@ -32,7 +32,18 @@ public class PaymentService : IPaymentService
             PeriodStart = dto.PeriodStart,
             PeriodEnd = dto.PeriodEnd,
             Notes = dto.Notes,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Lines = dto.Lines?.Select(l => new PaymentLine
+            {
+                Id = Guid.NewGuid(),
+                ResidenceId = residenceId,
+                FromMonth = l.FromMonth,
+                FromYear = l.FromYear,
+                ToMonth = l.ToMonth,
+                ToYear = l.ToYear,
+                Tarif = l.Tarif,
+                CreatedAt = DateTime.UtcNow
+            }).ToList() ?? new List<PaymentLine>()
         };
 
         var created = await _paymentRepository.AddAsync(payment);
@@ -58,6 +69,29 @@ public class PaymentService : IPaymentService
         payment.PaymentDate = dto.PaymentDate;
         payment.Notes = dto.Notes;
         payment.UpdatedAt = DateTime.UtcNow;
+
+        if (dto.Lines != null)
+        {
+            var newLines = dto.Lines.Select(l => new PaymentLine
+            {
+                Id = l.Id ?? Guid.NewGuid(),
+                PaymentId = payment.Id,
+                ResidenceId = payment.ResidenceId,
+                FromMonth = l.FromMonth,
+                FromYear = l.FromYear,
+                ToMonth = l.ToMonth,
+                ToYear = l.ToYear,
+                Tarif = l.Tarif,
+                CreatedAt = payment.CreatedAt,
+                UpdatedAt = DateTime.UtcNow
+            }).ToList();
+
+            payment.Lines.Clear();
+            foreach (var line in newLines)
+            {
+                payment.Lines.Add(line);
+            }
+        }
 
         await _paymentRepository.UpdateAsync(payment);
 
@@ -288,7 +322,17 @@ public class PaymentService : IPaymentService
             (residence.application.DTOs.PaymentStatus)payment.Status,
             payment.Notes,
             payment.CreatedAt,
-            payment.UpdatedAt
+            payment.UpdatedAt,
+            payment.Lines?.Select(l => new PaymentLineDto(
+                l.Id,
+                l.PaymentId,
+                l.FromMonth,
+                l.FromYear,
+                l.ToMonth,
+                l.ToYear,
+                l.Tarif,
+                l.CreatedAt,
+                l.UpdatedAt)).ToList()
         );
     }
 }

@@ -14,6 +14,10 @@ namespace residence.api.Endpoints
                 .WithTags("Users")
                 .WithOpenApi();
 
+            group.MapPost("/", CreateUser)
+                .WithName("CreateUser")
+                .WithSummary("Create a new user");
+
             group.MapGet("/{id}", GetUser)
                 .WithName("GetUser")
                 .WithSummary("Get user by ID");
@@ -29,6 +33,23 @@ namespace residence.api.Endpoints
             group.MapGet("/residence/{residenceId}", GetUsersByResidence)
                 .WithName("GetUsersByResidence")
                 .WithSummary("Get all users in residence");
+        }
+
+        private static async Task<IResult> CreateUser(IUserService service, Guid residenceId, CreateUserDto dto)
+        {
+            try
+            {
+                var result = await service.CreateUserAsync(residenceId, dto);
+                return Results.Created($"/api/residences/users/{result.Id}", result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Results.BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Results.StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         private static async Task<IResult> GetUser(IUserService service, Guid id)
