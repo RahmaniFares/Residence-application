@@ -42,6 +42,7 @@ namespace residence.domain.Entities
         public ICollection<Incident> Incidents { get; set; } = new List<Incident>();
         public ICollection<UserHouse> UserHouses { get; set; } = new List<UserHouse>();
         public ICollection<Rappel> Rappels { get; set; } = new List<Rappel>();
+        public ICollection<Donation> Donations { get; set; } = new List<Donation>();
     }
 
 }

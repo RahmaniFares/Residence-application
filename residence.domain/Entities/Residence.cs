@@ -71,6 +71,7 @@ namespace residence.domain.Entities
         public ICollection<Post> Posts { get; set; } = new List<Post>();
         public ICollection<Tarif> Tarifs { get; set; } = new List<Tarif>();
         public ICollection<TarifHistory> TarifHistories { get; set; } = new List<TarifHistory>();
+        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
         public ResidenceSettings Settings { get; set; } = null!;
     }
 

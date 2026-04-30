@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using residence.infrastructure.Data;
 
@@ -11,9 +12,11 @@ using residence.infrastructure.Data;
 namespace residence.infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260430183024_donator")]
+    partial class donator
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,247 +24,6 @@ namespace residence.infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("residence.domain.Entities.Donation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("Id");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("Amount");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Description");
-
-                    b.Property<DateTime>("DonationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DonationDate")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<Guid?>("DonorId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("DonorId");
-
-                    b.Property<Guid?>("HouseId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("HouseId");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("ResidenceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DonationDate")
-                        .HasDatabaseName("IX_Donations_DonationDate");
-
-                    b.HasIndex("DonorId")
-                        .HasDatabaseName("IX_Donations_DonorId");
-
-                    b.HasIndex("HouseId")
-                        .HasDatabaseName("IX_Donations_HouseId");
-
-                    b.HasIndex("HouseId", "DonationDate")
-                        .HasDatabaseName("IX_Donations_HouseId_DonationDate");
-
-                    b.ToTable("Donations", "dbo", t =>
-                        {
-                            t.HasCheckConstraint("CK_Donations_Amount_Positive", "[Amount] > 0");
-                        });
-                });
-
-            modelBuilder.Entity("residence.domain.Entities.Employee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("Id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("Email");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("EndDate");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("FirstName");
-
-                    b.Property<DateTime>("HireDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("HireDate");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("LastName");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Notes");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("PhoneNumber");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Position");
-
-                    b.Property<Guid>("ResidenceId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ResidenceId");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int")
-                        .HasColumnName("Status");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .HasDatabaseName("IX_Employees_Email");
-
-                    b.HasIndex("ResidenceId")
-                        .HasDatabaseName("IX_Employees_ResidenceId");
-
-                    b.HasIndex("ResidenceId", "Position")
-                        .HasDatabaseName("IX_Employees_ResidenceId_Position");
-
-                    b.HasIndex("ResidenceId", "Status")
-                        .HasDatabaseName("IX_Employees_ResidenceId_Status");
-
-                    b.ToTable("Employees", "dbo", t =>
-                        {
-                            t.HasCheckConstraint("CK_Employees_HireDate", "[HireDate] <= GETUTCDATE()");
-                        });
-                });
-
-            modelBuilder.Entity("residence.domain.Entities.EmployeeSalary", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("Id");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("Amount");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EffectiveDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("EffectiveDate");
-
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("EmployeeId");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("EndDate");
-
-                    b.Property<bool>("IsCurrent")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsCurrent");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Notes");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Reason");
-
-                    b.Property<Guid>("ResidenceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EffectiveDate")
-                        .HasDatabaseName("IX_EmployeeSalaries_EffectiveDate");
-
-                    b.HasIndex("EmployeeId")
-                        .HasDatabaseName("IX_EmployeeSalaries_EmployeeId");
-
-                    b.HasIndex("IsCurrent")
-                        .HasDatabaseName("IX_EmployeeSalaries_IsCurrent");
-
-                    b.HasIndex("EmployeeId", "EffectiveDate")
-                        .HasDatabaseName("IX_EmployeeSalaries_EmployeeId_EffectiveDate");
-
-                    b.HasIndex("EmployeeId", "IsCurrent")
-                        .HasDatabaseName("IX_EmployeeSalaries_EmployeeId_IsCurrent");
-
-                    b.ToTable("EmployeeSalaries", "dbo", t =>
-                        {
-                            t.HasCheckConstraint("CK_EmployeeSalaries_Amount_Positive", "[Amount] > 0");
-
-                            t.HasCheckConstraint("CK_EmployeeSalaries_DateRange", "[EndDate] IS NULL OR [EndDate] >= [EffectiveDate]");
-                        });
-                });
 
             modelBuilder.Entity("residence.domain.Entities.Expense", b =>
                 {
@@ -1362,45 +1124,6 @@ namespace residence.infrastructure.Migrations
                     b.ToTable("UserHouses");
                 });
 
-            modelBuilder.Entity("residence.domain.Entities.Donation", b =>
-                {
-                    b.HasOne("residence.domain.Entities.Resident", "Donor")
-                        .WithMany("DonationsAsContributor")
-                        .HasForeignKey("DonorId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("residence.domain.Entities.House", "House")
-                        .WithMany("Donations")
-                        .HasForeignKey("HouseId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Donor");
-
-                    b.Navigation("House");
-                });
-
-            modelBuilder.Entity("residence.domain.Entities.Employee", b =>
-                {
-                    b.HasOne("residence.domain.Entities.Residence", "Residence")
-                        .WithMany("Employees")
-                        .HasForeignKey("ResidenceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Residence");
-                });
-
-            modelBuilder.Entity("residence.domain.Entities.EmployeeSalary", b =>
-                {
-                    b.HasOne("residence.domain.Entities.Employee", "Employee")
-                        .WithMany("Salaries")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("residence.domain.Entities.Expense", b =>
                 {
                     b.HasOne("residence.domain.Entities.Residence", null)
@@ -1658,11 +1381,6 @@ namespace residence.infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("residence.domain.Entities.Employee", b =>
-                {
-                    b.Navigation("Salaries");
-                });
-
             modelBuilder.Entity("residence.domain.Entities.Expense", b =>
                 {
                     b.Navigation("Images");
@@ -1670,8 +1388,6 @@ namespace residence.infrastructure.Migrations
 
             modelBuilder.Entity("residence.domain.Entities.House", b =>
                 {
-                    b.Navigation("Donations");
-
                     b.Navigation("Incidents");
 
                     b.Navigation("Payments");
@@ -1702,8 +1418,6 @@ namespace residence.infrastructure.Migrations
 
             modelBuilder.Entity("residence.domain.Entities.Residence", b =>
                 {
-                    b.Navigation("Employees");
-
                     b.Navigation("Expenses");
 
                     b.Navigation("Houses");
@@ -1728,8 +1442,6 @@ namespace residence.infrastructure.Migrations
 
             modelBuilder.Entity("residence.domain.Entities.Resident", b =>
                 {
-                    b.Navigation("DonationsAsContributor");
-
                     b.Navigation("Incidents");
 
                     b.Navigation("Payments");

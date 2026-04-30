@@ -63,6 +63,7 @@ app.MapHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
+
 // Map endpoints
 app.MapAuthEndpoints();
 app.MapUserEndpoints();
@@ -76,7 +77,12 @@ app.MapTarifEndpoints();
 app.MapExpenseEndpoints();
 app.MapIncidentEndpoints();
 app.MapPostEndpoints();
-app.UseRouting();
+
+// Employee Management Endpoints
+app.MapEmployeeEndpoints();
+
+//// Donation Endpoints
+app.MapDonationEndpoints();
 
 app.Run();
 

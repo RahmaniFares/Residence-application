@@ -25,6 +25,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IIncidentService, IncidentService>();
         services.AddScoped<IPostService, PostService>();
 
+        // Employee Management
+        services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IDonationService, DonationService>();
+
         return services;
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using residence.domain.Common;
 using residence.domain.Entities;
 using residence.infrastructure.Configurations;
+using residence.infrastructure.Persistence.Configurations;
 
 namespace residence.infrastructure.Data;
 
@@ -22,6 +23,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<House> Houses { get; set; }
     public DbSet<Resident> Residents { get; set; }
     public DbSet<UserHouse> UserHouses { get; set; }
+    public DbSet<Donation> Donations { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<EmployeeSalary> EmployeeSalaries { get; set; }
 
     // Payments
     public DbSet<Payment> Payments { get; set; }
@@ -58,6 +62,9 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new HouseConfiguration());
         modelBuilder.ApplyConfiguration(new UserHouseConfiguration());
         modelBuilder.ApplyConfiguration(new ResidentConfiguration());
+        modelBuilder.ApplyConfiguration(new DonationConfiguration());
+        modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+        modelBuilder.ApplyConfiguration(new EmployeeSalaryConfiguration());
         modelBuilder.ApplyConfiguration(new PaymentConfiguration());
         modelBuilder.ApplyConfiguration(new PaymentLineConfiguration());
         modelBuilder.ApplyConfiguration(new RappelConfiguration());

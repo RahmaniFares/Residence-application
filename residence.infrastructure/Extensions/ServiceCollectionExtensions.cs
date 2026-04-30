@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using residence.application.Repositories;
 using residence.infrastructure.Data;
 using residence.infrastructure.Repositories;
+using residence.infrastructure.Persistence.Repositories;
+using System.Runtime.Intrinsics.Arm;
 
 namespace residence.infrastructure.Extensions;
 
@@ -39,6 +41,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IPostLikeRepository, PostLikeRepository>();
         services.AddScoped<IPostCommentRepository, PostCommentRepository>();
+
+        // Employee Management
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IDonationRepository,DonationRepository>();
 
         return services;
     }

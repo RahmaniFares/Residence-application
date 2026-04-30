@@ -84,5 +84,11 @@ namespace residence.domain.Entities
         /// Posts created by this resident
         /// </summary>
         public ICollection<Post> Posts { get; set; } = new List<Post>();
+
+        /// <summary>
+        /// Donations made by this resident as contributor
+        /// </summary>
+        public ICollection<Donation> DonationsAsContributor { get; set; } = new List<Donation>();
+
     }
 }
