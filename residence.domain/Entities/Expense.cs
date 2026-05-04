@@ -38,7 +38,17 @@ namespace residence.domain.Entities
         /// </summary>
         public string Description { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Associated block (if null, expense is shared across all blocks)
+        /// </summary>
+        public Guid? BlockId { get; set; }
+
         // Navigation properties
         public ICollection<ExpenseImage> Images { get; set; } = new List<ExpenseImage>();
+
+        /// <summary>
+        /// Associated block for this expense
+        /// </summary>
+        public Block? Block { get; set; }
     }
 }

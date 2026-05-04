@@ -57,4 +57,72 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
             .Where(e => e.ResidenceId == residenceId && e.Type == type && !e.IsDeleted)
             .SumAsync(e => e.Amount);
     }
+
+    public async Task<IEnumerable<Expense>> GetAllByResidenceAsync(Guid residenceId)
+    {
+        return await _dbSet
+            .Where(e => e.ResidenceId == residenceId && !e.IsDeleted)
+            .Include(e => e.Images)
+            .OrderByDescending(e => e.ExpenseDate)
+            .ToListAsync();
+    }
+
+    public async Task<Dictionary<(int Year, int Month), List<Expense>>> GetExpensesByMonthAsync(Guid residenceId)
+    {
+        var expenses = await GetAllByResidenceAsync(residenceId);
+        return expenses
+            .GroupBy(e => (e.ExpenseDate.Year, e.ExpenseDate.Month))
+            .OrderBy(g => g.Key.Year)
+            .ThenBy(g => g.Key.Month)
+            .ToDictionary(g => g.Key, g => g.ToList());
+    }
+
+    public async Task<Dictionary<ExpenseType, List<Expense>>> GetExpensesByTypeAsync(Guid residenceId)
+    {
+        var expenses = await GetAllByResidenceAsync(residenceId);
+        return expenses
+            .GroupBy(e => e.Type)
+            .ToDictionary(g => g.Key, g => g.ToList());
+    }
+
+    public async Task<int> GetCountAsync(Guid residenceId)
+    {
+        return await _dbSet
+            .Where(e => e.ResidenceId == residenceId && !e.IsDeleted)
+            .CountAsync();
+    }
+
+    public async Task<decimal> GetMinAmountAsync(Guid residenceId)
+    {
+        var expenses = await _dbSet
+            .Where(e => e.ResidenceId == residenceId && !e.IsDeleted)
+            .ToListAsync();
+
+        return expenses.Any() ? expenses.Min(e => e.Amount) : 0;
+    }
+
+    public async Task<decimal> GetMaxAmountAsync(Guid residenceId)
+    {
+        return await _dbSet
+            .Where(e => e.ResidenceId == residenceId && !e.IsDeleted)
+            .MaxAsync(e => (decimal?)e.Amount) ?? 0;
+    }
+
+    public async Task<DateTime?> GetEarliestDateAsync(Guid residenceId)
+    {
+        return await _dbSet
+            .Where(e => e.ResidenceId == residenceId && !e.IsDeleted)
+            .OrderBy(e => e.ExpenseDate)
+            .Select(e => e.ExpenseDate)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<DateTime?> GetLatestDateAsync(Guid residenceId)
+    {
+        return await _dbSet
+            .Where(e => e.ResidenceId == residenceId && !e.IsDeleted)
+            .OrderByDescending(e => e.ExpenseDate)
+            .Select(e => e.ExpenseDate)
+            .FirstOrDefaultAsync();
+    }
 }

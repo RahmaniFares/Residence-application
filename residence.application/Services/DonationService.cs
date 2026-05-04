@@ -25,12 +25,13 @@ namespace residence.application.Services
             _houseRepository = houseRepository;
         }
 
-        public async Task<DonationDto> CreateDonationAsync(Guid houseId, CreateDonationDto dto)
+        public async Task<DonationDto> CreateDonationAsync(Guid? houseId, CreateDonationDto dto)
         {
             // Validate house exists
-            var house = await _houseRepository.GetByIdAsync(houseId);
-            if (house == null)
-                throw new Exception("House not found");
+            House? house = null;
+            if (houseId.HasValue) {      
+             house = await _houseRepository.GetByIdAsync(houseId.Value);
+            }   
 
             // Validate amount
             if (dto.Amount <= 0)
@@ -39,7 +40,7 @@ namespace residence.application.Services
             var donation = new Donation
             {
                 Id = Guid.NewGuid(),
-                HouseId = dto.HouseId ?? houseId,
+                HouseId = house?.Id,
                 DonorId = dto.DonorId,
                 Amount = dto.Amount,
                 DonationDate = dto.DonationDate == default ? DateTime.UtcNow : dto.DonationDate,

@@ -31,6 +31,7 @@ public class PaymentService : IPaymentService
             Status = domain.Enums.PaymentStatus.Paid,
             PeriodStart = dto.PeriodStart,
             PeriodEnd = dto.PeriodEnd,
+            PaymentDate = dto.PaymentDate ?? DateTime.UtcNow,
             Notes = dto.Notes,
             CreatedAt = DateTime.UtcNow,
             Lines = dto.Lines?.Select(l => new PaymentLine
@@ -69,6 +70,9 @@ public class PaymentService : IPaymentService
         payment.PaymentDate = dto.PaymentDate;
         payment.Notes = dto.Notes;
         payment.UpdatedAt = DateTime.UtcNow;
+        payment.Amount = dto.Amount  ?? payment.Amount;
+        payment.PeriodStart = dto.PeriodStart ?? payment.PeriodStart;
+        payment.PeriodEnd = dto.PeriodEnd ?? payment.PeriodEnd;
 
         if (dto.Lines != null)
         {
@@ -93,7 +97,7 @@ public class PaymentService : IPaymentService
             }
         }
 
-        await _paymentRepository.UpdateAsync(payment);
+         await _paymentRepository.UpdateAsync(payment);
 
         return MapToDto(payment);
     }

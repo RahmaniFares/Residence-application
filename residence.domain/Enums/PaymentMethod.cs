@@ -7,5 +7,6 @@ public enum PaymentMethod
 {
     Cash = 0,
     Transfer = 1,
-    Card = 2
+    Card = 2,
+    Check = 3
 }

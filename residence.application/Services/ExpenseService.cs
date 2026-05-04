@@ -79,6 +79,7 @@ public class ExpenseService : IExpenseService
         
         var total = expenses.Count();
         var items = expenses
+            .OrderByDescending(d => d.ExpenseDate)
             .Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
             .Select(e => MapToDto(e))
@@ -133,5 +134,132 @@ public class ExpenseService : IExpenseService
             expense.CreatedAt,
             expense.UpdatedAt
         );
+    }
+
+    // KPI and Statistics Implementation
+    public async Task<TotalExpenseKpiDto> GetTotalExpenseKpiAsync(Guid residenceId)
+    {
+        var total = await _expenseRepository.GetTotalAsync(residenceId);
+        var count = await _expenseRepository.GetCountAsync(residenceId);
+        var minAmount = await _expenseRepository.GetMinAmountAsync(residenceId);
+        var maxAmount = await _expenseRepository.GetMaxAmountAsync(residenceId);
+        var earliestDate = await _expenseRepository.GetEarliestDateAsync(residenceId);
+        var latestDate = await _expenseRepository.GetLatestDateAsync(residenceId);
+
+        var average = count > 0 ? total / count : 0;
+
+        return new TotalExpenseKpiDto(
+            total,
+            count,
+            average,
+            maxAmount,
+            minAmount,
+            earliestDate,
+            latestDate
+        );
+    }
+
+    public async Task<MonthlyExpensesDto> GetMonthlyExpensesAsync(Guid residenceId)
+    {
+        var expensesByMonth = await _expenseRepository.GetExpensesByMonthAsync(residenceId);
+
+        var monthlyData = new List<MonthlyExpenseDto>();
+        decimal totalAmount = 0;
+        int totalCount = 0;
+
+        foreach (var monthGroup in expensesByMonth)
+        {
+            var (year, month) = monthGroup.Key;
+            var expenses = monthGroup.Value;
+
+            var monthTotal = expenses.Sum(e => e.Amount);
+            var monthCount = expenses.Count;
+            var monthAverage = monthCount > 0 ? monthTotal / monthCount : 0;
+
+            // Get month name
+            var monthName = new DateTime(year, month, 1).ToString("MMMM");
+
+            monthlyData.Add(new MonthlyExpenseDto(
+                year,
+                month,
+                monthName,
+                monthTotal,
+                monthCount,
+                monthAverage
+            ));
+
+            totalAmount += monthTotal;
+            totalCount += monthCount;
+        }
+
+        return new MonthlyExpensesDto(
+            monthlyData,
+            totalAmount,
+            totalCount,
+            monthlyData.Count
+        );
+    }
+
+    public async Task<ExpenseStatsDto> GetExpenseStatsByTypeAsync(Guid residenceId)
+    {
+        var expensesByType = await _expenseRepository.GetExpensesByTypeAsync(residenceId);
+        var totalAmount = await _expenseRepository.GetTotalAsync(residenceId);
+        var totalCount = await _expenseRepository.GetCountAsync(residenceId);
+
+        var statsData = new List<ExpenseTypeStatsDto>();
+
+        foreach (var typeGroup in expensesByType)
+        {
+            var type = typeGroup.Key;
+            var expenses = typeGroup.Value;
+
+            var count = expenses.Count;
+            var amount = expenses.Sum(e => e.Amount);
+            var average = count > 0 ? amount / count : 0;
+            var percentage = totalAmount > 0 ? (amount / totalAmount) * 100 : 0;
+
+            statsData.Add(new ExpenseTypeStatsDto(
+                (DTOs.ExpenseType)type,
+                GetExpenseTypeName(type),
+                count,
+                amount,
+                average,
+                percentage
+            ));
+        }
+
+        // Sort by amount descending to find highest and lowest
+        var sorted = statsData.OrderByDescending(s => s.TotalAmount).ToList();
+        var highest = sorted.FirstOrDefault() ?? new ExpenseTypeStatsDto(
+            DTOs.ExpenseType.Other, "N/A", 0, 0, 0, 0);
+        var lowest = sorted.LastOrDefault() ?? new ExpenseTypeStatsDto(
+            DTOs.ExpenseType.Other, "N/A", 0, 0, 0, 0);
+
+        return new ExpenseStatsDto(
+            statsData.OrderBy(s => s.Type).ToList(),
+            totalAmount,
+            totalCount,
+            highest,
+            lowest
+        );
+    }
+
+    private string GetExpenseTypeName(domain.Enums.ExpenseType type)
+    {
+        return type switch
+        {
+            domain.Enums.ExpenseType.Maintenance => "Maintenance",
+            domain.Enums.ExpenseType.Electricity => "Electricity",
+            domain.Enums.ExpenseType.Water => "Water",
+            domain.Enums.ExpenseType.Cleaning => "Cleaning",
+            domain.Enums.ExpenseType.Security => "Security",
+            domain.Enums.ExpenseType.Gardening => "Gardening",
+            domain.Enums.ExpenseType.Repairs => "Repairs",
+            domain.Enums.ExpenseType.Equipment => "Equipment",
+            domain.Enums.ExpenseType.Insurance => "Insurance",
+            domain.Enums.ExpenseType.Taxes => "Taxes",
+            domain.Enums.ExpenseType.Other => "Other",
+            _ => "Unknown"
+        };
     }
 }

@@ -41,6 +41,23 @@ namespace residence.api.Endpoints
             group.MapDelete("/images/{imageId}", RemoveImageFromExpense)
                 .WithName("RemoveImageFromExpense")
                 .WithSummary("Remove image from expense");
+
+            // KPI and Statistics Endpoints
+            var kpiGroup = app.MapGroup("/api/residences/{residenceId}/expenses/kpi")
+                .WithTags("Expense KPI")
+                .WithOpenApi();
+
+            kpiGroup.MapGet("/total", GetTotalExpenseKpi)
+                .WithName("GetTotalExpenseKpi")
+                .WithSummary("Get total expense KPI (sum, count, avg, min, max, dates)");
+
+            kpiGroup.MapGet("/monthly", GetMonthlyExpenses)
+                .WithName("GetMonthlyExpenses")
+                .WithSummary("Get expense breakdown by month");
+
+            kpiGroup.MapGet("/by-type", GetExpenseStatsByType)
+                .WithName("GetExpenseStatsByType")
+                .WithSummary("Get expense statistics by category type");
         }
 
         private static async Task<IResult> CreateExpense(IExpenseService service, Guid residenceId, CreateExpenseDto dto)
@@ -127,6 +144,46 @@ namespace residence.api.Endpoints
             {
                 await service.RemoveImageFromExpenseAsync(imageId);
                 return Results.NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // KPI and Statistics Endpoint Handlers
+        private static async Task<IResult> GetTotalExpenseKpi(IExpenseService service, Guid residenceId)
+        {
+            try
+            {
+                var result = await service.GetTotalExpenseKpiAsync(residenceId);
+                return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new { message = ex.Message });
+            }
+        }
+
+        private static async Task<IResult> GetMonthlyExpenses(IExpenseService service, Guid residenceId)
+        {
+            try
+            {
+                var result = await service.GetMonthlyExpensesAsync(residenceId);
+                return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new { message = ex.Message });
+            }
+        }
+
+        private static async Task<IResult> GetExpenseStatsByType(IExpenseService service, Guid residenceId)
+        {
+            try
+            {
+                var result = await service.GetExpenseStatsByTypeAsync(residenceId);
+                return Results.Ok(result);
             }
             catch (Exception ex)
             {

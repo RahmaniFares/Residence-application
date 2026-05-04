@@ -109,6 +109,9 @@ public class HouseService : IHouseService
 
         var total = houses.Count();
         var items = houses
+            .OrderBy(h => h.Block)
+            .OrderBy(h => h.Floor)
+            .OrderBy(h => h.Unit)
             .Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
             .Select(MapToDto)
@@ -125,6 +128,10 @@ public class HouseService : IHouseService
 
         var total = houses.Count();
         var items = houses
+            .OrderBy(h => h.Unit)
+            .OrderBy(h => h.Floor)
+            .OrderBy(h => h.Block)
+            
             .Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
             .Select(h => new HouseDetailDto(

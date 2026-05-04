@@ -9,6 +9,7 @@ public record CreatePaymentDto(
     PaymentMethod Method,
     DateTime PeriodStart,
     DateTime PeriodEnd,
+    DateTime? PaymentDate,
     string? Notes = null,
     IEnumerable<CreatePaymentLineDto>? Lines = null
 );

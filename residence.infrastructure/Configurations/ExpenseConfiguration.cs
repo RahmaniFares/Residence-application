@@ -33,6 +33,9 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         builder.Property(e => e.ResidenceId)
             .IsRequired();
 
+        builder.Property(e => e.BlockId)
+            .IsRequired(false);
+
         builder.Property(e => e.CreatedAt)
             .HasDefaultValueSql("GETUTCDATE()");
 
@@ -40,6 +43,11 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
             .HasDefaultValue(false);
 
         // Relationships
+        builder.HasOne(e => e.Block)
+            .WithMany(b => b.Expenses)
+            .HasForeignKey(e => e.BlockId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasMany(e => e.Images)
             .WithOne(ei => ei.Expense)
             .HasForeignKey(ei => ei.ExpenseId)

@@ -51,6 +51,12 @@ public abstract class Repository<T> : IRepository<T> where T : BaseEntity
         _dbSet.Update(entity);
         await _context.SaveChangesAsync();
     }
+    public virtual  void Update(T entity)
+    {
+        entity.UpdatedAt = DateTime.UtcNow;
+        _dbSet.Update(entity);
+         _context.SaveChanges();
+    }
 
     public virtual async Task DeleteAsync(Guid id)
     {

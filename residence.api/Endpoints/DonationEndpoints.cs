@@ -70,15 +70,14 @@ namespace residence.api.Endpoints
                 .WithName("GetAllDonations")
                 .WithSummary("Get all donations");
         }
-
+            
         private static async Task<IResult> CreateDonation(IDonationService service, [FromBody] CreateDonationDto dto)
         {
             try
             {
-                if (!dto.HouseId.HasValue)
-                    return Results.BadRequest(new { message = "HouseId is required" });
-
-                var result = await service.CreateDonationAsync(dto.HouseId.Value, dto);
+                
+                var houseId = dto.HouseId ;
+                var result = await service.CreateDonationAsync(houseId, dto);
                 return Results.Created($"/api/donations/{result.Id}", result);
             }
             catch (Exception ex)

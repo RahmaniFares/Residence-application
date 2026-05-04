@@ -13,7 +13,7 @@ namespace residence.application.Interfaces
         /// <summary>
         /// Create a new donation
         /// </summary>
-        Task<DonationDto> CreateDonationAsync(Guid houseId, CreateDonationDto dto);
+        Task<DonationDto> CreateDonationAsync(Guid? houseId, CreateDonationDto dto);
 
         /// <summary>
         /// Get donation by ID
