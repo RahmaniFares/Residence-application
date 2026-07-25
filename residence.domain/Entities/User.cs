@@ -36,7 +36,7 @@ namespace residence.domain.Entities
         /// <summary>
         /// Phone number
         /// </summary>
-        public string PhoneNumber { get; set; } = string.Empty;
+        public string? PhoneNumber { get; set; } = string.Empty;
 
         /// <summary>
         /// User role (Admin/Resident)

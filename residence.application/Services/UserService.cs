@@ -19,10 +19,10 @@ public class UserService : IUserService
 
     public async Task<UserDto> CreateUserAsync(Guid residenceId, CreateUserDto dto)
     {
-        // Check if email already exists in this residence
+        // Check if email already exists (globally)
         var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
-        if (existingUser != null && existingUser.ResidenceId == residenceId)
-            throw new InvalidOperationException("Email already exists in this residence");
+        if (existingUser != null)
+            throw new InvalidOperationException("This email is already registered in the system.");
 
         // Hash the password (simplified - use BCrypt in production)
         var passwordHash = HashPassword(dto.Password);

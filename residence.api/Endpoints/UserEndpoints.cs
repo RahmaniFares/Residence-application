@@ -37,71 +37,32 @@ namespace residence.api.Endpoints
 
         private static async Task<IResult> CreateUser(IUserService service, Guid residenceId, CreateUserDto dto)
         {
-            try
-            {
-                var result = await service.CreateUserAsync(residenceId, dto);
-                return Results.Created($"/api/residences/users/{result.Id}", result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Results.BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return Results.StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            var result = await service.CreateUserAsync(residenceId, dto);
+            return Results.Created($"/api/residences/users/{result.Id}", result);
         }
 
         private static async Task<IResult> GetUser(IUserService service, Guid id)
         {
-            try
-            {
-                var result = await service.GetUserByIdAsync(id);
-                return Results.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return Results.NotFound(new { message = ex.Message });
-            }
+            var result = await service.GetUserByIdAsync(id);
+            return Results.Ok(result);
         }
 
         private static async Task<IResult> UpdateUser(IUserService service, Guid id, UpdateUserDto dto)
         {
-            try
-            {
-                var result = await service.UpdateUserAsync(id, dto);
-                return Results.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(new { message = ex.Message });
-            }
+            var result = await service.UpdateUserAsync(id, dto);
+            return Results.Ok(result);
         }
 
         private static async Task<IResult> DeleteUser(IUserService service, Guid id)
         {
-            try
-            {
-                await service.DeleteUserAsync(id);
-                return Results.NoContent();
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(new { message = ex.Message });
-            }
+            await service.DeleteUserAsync(id);
+            return Results.NoContent();
         }
 
         private static async Task<IResult> GetUsersByResidence(IUserService service, Guid residenceId, [AsParameters] PaginationDto pagination)
         {
-            try
-            {
-                var result = await service.GetUsersByResidenceAsync(residenceId, pagination);
-                return Results.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest(new { message = ex.Message });
-            }
+            var result = await service.GetUsersByResidenceAsync(residenceId, pagination);
+            return Results.Ok(result);
         }
     }
 }

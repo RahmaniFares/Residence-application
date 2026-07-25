@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using residence.api.Endpoints;
+using residence.api.Middleware;
 using residence.application.Extensions;
 using residence.infrastructure.Data;
 using residence.infrastructure.Extensions;
@@ -52,6 +53,9 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline
+
+// Add global exception handling middleware (must be before other middleware)
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
