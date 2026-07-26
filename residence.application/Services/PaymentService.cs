@@ -32,6 +32,7 @@ public class PaymentService : IPaymentService
             PeriodStart = dto.PeriodStart,
             PeriodEnd = dto.PeriodEnd,
             PaymentDate = dto.PaymentDate ?? DateTime.UtcNow,
+            ReceiptNumber = dto.ReceiptNumber,
             Notes = dto.Notes,
             CreatedAt = DateTime.UtcNow,
             Lines = dto.Lines?.Select(l => new PaymentLine
@@ -68,6 +69,7 @@ public class PaymentService : IPaymentService
 
         payment.Status = (domain.Enums.PaymentStatus)(int)dto.Status;
         payment.PaymentDate = dto.PaymentDate;
+        payment.ReceiptNumber = dto.ReceiptNumber ?? payment.ReceiptNumber;
         payment.Notes = dto.Notes;
         payment.UpdatedAt = DateTime.UtcNow;
         payment.Amount = dto.Amount  ?? payment.Amount;
@@ -114,9 +116,10 @@ public class PaymentService : IPaymentService
     public async Task<PagedResultDto<PaymentDto>> GetPaymentsByResidenceAsync(Guid residenceId, PaginationDto pagination)
     {
         var payments = await _paymentRepository.GetByResidenceAsync(residenceId);
-        
+
         var total = payments.Count();
         var items = payments
+            .OrderByDescending(p => p.PaymentDate)
             .Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
             .Select(MapToDto)
@@ -130,9 +133,10 @@ public class PaymentService : IPaymentService
     public async Task<PagedResultDto<PaymentDto>> GetPaymentsByResidentAsync(Guid residentId, PaginationDto pagination)
     {
         var payments = await _paymentRepository.GetByResidentAsync(residentId);
-        
+
         var total = payments.Count();
         var items = payments
+            .OrderByDescending(p => p.PaymentDate)
             .Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
             .Select(MapToDto)
@@ -149,6 +153,7 @@ public class PaymentService : IPaymentService
 
         var total = payments.Count();
         var items = payments
+            .OrderByDescending(p => p.PaymentDate)
             .Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
             .Select(MapToDto)
@@ -323,6 +328,7 @@ public class PaymentService : IPaymentService
             payment.PeriodStart,
             payment.PeriodEnd,
             payment.PaymentDate,
+            payment.ReceiptNumber,
             (residence.application.DTOs.PaymentStatus)payment.Status,
             payment.Notes,
             payment.CreatedAt,

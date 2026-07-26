@@ -10,6 +10,7 @@ public record CreatePaymentDto(
     DateTime PeriodStart,
     DateTime PeriodEnd,
     DateTime? PaymentDate,
+    string? ReceiptNumber = null,
     string? Notes = null,
     IEnumerable<CreatePaymentLineDto>? Lines = null
 );

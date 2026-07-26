@@ -49,6 +49,11 @@ namespace residence.domain.Entities
         public DateTime? PaymentDate { get; set; }
 
         /// <summary>
+        /// Receipt number for tracking and reference
+        /// </summary>
+        public string? ReceiptNumber { get; set; }
+
+        /// <summary>
         /// Payment status
         /// </summary>
         public PaymentStatus Status { get; set; } = PaymentStatus.Pending;

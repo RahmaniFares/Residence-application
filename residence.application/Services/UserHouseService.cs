@@ -95,7 +95,7 @@ namespace residence.application.Services
                         Block = house.Block,
                         Unit = house.Unit,
                         Floor = house.Floor,
-                        Status = house.Status.ToString(),
+                        Status = (HouseStatus)house.Status,
                         AssignedDate = uh.AssignedDate,
                         Notes = uh.Notes
                     });

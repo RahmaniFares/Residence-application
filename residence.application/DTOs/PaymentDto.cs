@@ -11,6 +11,7 @@ public record PaymentDto(
     DateTime PeriodStart,
     DateTime PeriodEnd,
     DateTime? PaymentDate,
+    string? ReceiptNumber,
     PaymentStatus Status,
     string? Notes,
     DateTime CreatedAt,

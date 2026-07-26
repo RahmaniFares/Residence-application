@@ -33,6 +33,10 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.Property(e => e.Notes)
             .HasMaxLength(500);
 
+        builder.Property(e => e.ReceiptNumber)
+            .HasColumnType("nvarchar(50)")
+            .IsRequired(false);
+
         builder.Property(e => e.ResidenceId)
             .IsRequired();
 

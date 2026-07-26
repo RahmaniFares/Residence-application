@@ -130,7 +130,7 @@ namespace residence.application.DTOs
         public string Block { get; set; } = string.Empty;
         public string Unit { get; set; } = string.Empty;
         public string? Floor { get; set; }
-        public string Status { get; set; } = string.Empty;
+        public HouseStatus Status { get; set; } = HouseStatus.Vacant;
         public DateTime AssignedDate { get; set; }
         public string? Notes { get; set; }
     }

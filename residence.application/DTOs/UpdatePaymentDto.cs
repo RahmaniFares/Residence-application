@@ -5,6 +5,7 @@ namespace residence.application.DTOs;
 public record UpdatePaymentDto(
     PaymentStatus Status,
     DateTime? PaymentDate = null,
+    string? ReceiptNumber = null,
     string? Notes = null,
     DateTime? PeriodStart = null,
     DateTime? PeriodEnd = null,
