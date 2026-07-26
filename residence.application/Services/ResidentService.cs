@@ -55,12 +55,11 @@ public class ResidentService : IResidentService
         if (resident == null)
             throw new Exception("Resident not found");
 
-        resident.HouseId = dto.HouseId;
         resident.FirstName = dto.FirstName;
         resident.LastName = dto.LastName;
         resident.PhoneNumber = dto.PhoneNumber;
-        resident.Address = dto.Address;
         resident.BirthDate = dto.BirthDate;
+        resident.Email = dto.Email;
         resident.Status = (domain.Enums.ResidentStatus)(int)dto.Status;
         resident.UpdatedAt = DateTime.UtcNow;
 
